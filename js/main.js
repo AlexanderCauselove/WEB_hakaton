@@ -24,14 +24,17 @@ function getRandomId() {
   );
 }
 
-function addToDo(task_input,task_comment,date_input) {
+function addToDo(task_input,task_comment,date_input,task_priority) {
   let task = {
     id: getRandomId(),
-    task: task_input.value.length > 14 ? task_input.value.slice(0, 14)  : task_input.value,
+    task: task_input.value.length > 14 ? task_input.value.slice(0, 14) + "..." : task_input.value,
     comment: task_comment.value,
     dueDate: date_input.value,
     completed: false,
     status: "В ожидании",
+    priority: task_priority.value,
+
+
   };
   todos.push(task);
 }
@@ -58,12 +61,13 @@ add_btn.addEventListener("click", () => {
   if (task_input.value === "" || task_comment.value === "") {
     showAlertMessage("Пожалуйста , заполните все поля", "error");
   } else {
-    addToDo(task_input, task_comment, date_input); // Added date input
+    addToDo(task_input, task_comment, date_input, task_priority); // Added date input
     saveToLocalStorage();
     showAllTodos();
     task_input.value = "";
     task_comment.value = "";
     date_input.value = ""; // Added date input
+    task_priority.value = "";
     showAlertMessage("Задача успешно добавлена", "success");
 
   }
@@ -75,7 +79,7 @@ delete_all_btn.addEventListener("click", clearAllTodos);
 function showAllTodos() {
   todos_list_body.innerHTML = "";
   if (todos.length === 0) {
-    todos_list_body.innerHTML = `<tr><td colspan="6" class="text-center">Задачи не найдены</td></tr>`;
+    todos_list_body.innerHTML = `<tr><td colspan="7" class="text-center">Задачи не найдены</td></tr>`;
     return;
   }
 
@@ -84,8 +88,10 @@ function showAllTodos() {
             <tr class="todo-item" data-id="${todo.id}">
                 <td>${todo.task}</td>
                 <td>${todo.comment}</td>
-                <td>${todo.dueDate || "No due date"}</td>
-                <td>${todo.status}</td>
+                <td>${todo.dueDate || "Бессрочно"}</td>
+                <td>${todo.completed ? "Выполнено" : "В ожидании"}</td>
+                <td>${todo.priority}</td>
+               
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editTodo('${
                       todo.id
@@ -145,6 +151,8 @@ function deleteTodo(id) {
 function editTodo(id) {
   let todo = todos.find((todo) => todo.id === id);
   task_input.value = todo.task;
+  task_comment.value = todo.comment;
+  task_priority.value = todo.priority;
   todos = todos.filter((todo) => todo.id !== id);
   add_btn.innerHTML = "<i class='bx bx-check bx-sm'></i>";
   saveToLocalStorage();
@@ -183,7 +191,7 @@ function filterTodos(status) {
     case "В ожидании":
       filteredTodos = todos.filter((todo) => !todo.completed);
       break;
-    case "Выполено":
+    case "Выполнено":
       filteredTodos = todos.filter((todo) => todo.completed);
       break;
   }
@@ -201,7 +209,7 @@ function displayTodos(todosArray) {
             <tr class="todo-item" data-id="${todo.id}">
                 <td>${todo.task}</td>
                 <td>${todo.comment}</td>
-                <td>${todo.dueDate || "No due date"}</td>
+                <td>${todo.dueDate || "Бессрочно"}</td>
                 <td>${todo.completed ? "Выполнено" : "В ожидании"}</td>
                 <td>${todo.priority}</td>
                 <td>
