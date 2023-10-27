@@ -1,6 +1,7 @@
 const task_input = document.querySelector("#task");
 const task_comment = document.querySelector("#comment");
 const task_priority = document.querySelector("#priority");
+const task_whom = document.querySelector("#whom");
 const date_input = document.querySelector(".schedule-date"); // added date input
 const add_btn = document.querySelector(".add-task-button");
 const todos_list_body = document.querySelector(".todos-list-body");
@@ -24,17 +25,16 @@ function getRandomId() {
   );
 }
 
-function addToDo(task_input,task_comment,date_input,task_priority) {
+function addToDo(task_input,task_comment,date_input,task_priority,task_whom) {
   let task = {
     id: getRandomId(),
-    task: task_input.value.length > 14 ? task_input.value.slice(0, 14) + "..." : task_input.value,
-    comment: task_comment.value,
+    task: task_input.value.length > 20 ? task_input.value.slice(0, 20) + "..." : task_input.value,
+    comment: task_comment.value.length > 20 ? task_comment.value.slice(0, 20) + "..." : task_comment.value,
     dueDate: date_input.value,
     completed: false,
     status: "В ожидании",
     priority: task_priority.value,
-
-
+    whom: task_whom.value,
   };
   todos.push(task);
 }
@@ -61,13 +61,14 @@ add_btn.addEventListener("click", () => {
   if (task_input.value === "" || task_comment.value === "") {
     showAlertMessage("Пожалуйста , заполните все поля", "error");
   } else {
-    addToDo(task_input, task_comment, date_input, task_priority); // Added date input
+    addToDo(task_input, task_comment, date_input, task_priority, task_whom); // Added date input
     saveToLocalStorage();
     showAllTodos();
     task_input.value = "";
     task_comment.value = "";
     date_input.value = ""; // Added date input
     task_priority.value = "";
+    task_whom.value = "";
     showAlertMessage("Задача успешно добавлена", "success");
 
   }
@@ -79,7 +80,7 @@ delete_all_btn.addEventListener("click", clearAllTodos);
 function showAllTodos() {
   todos_list_body.innerHTML = "";
   if (todos.length === 0) {
-    todos_list_body.innerHTML = `<tr><td colspan="7" class="text-center">Задачи не найдены</td></tr>`;
+    todos_list_body.innerHTML = `<tr><td colspan="8" class="text-center">Задачи не найдены</td></tr>`;
     return;
   }
 
@@ -91,6 +92,7 @@ function showAllTodos() {
                 <td>${todo.dueDate || "Бессрочно"}</td>
                 <td>${todo.completed ? "Выполнено" : "В ожидании"}</td>
                 <td>${todo.priority}</td>
+                <td>${todo.whom}</td>
                
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editTodo('${
@@ -153,6 +155,7 @@ function editTodo(id) {
   task_input.value = todo.task;
   task_comment.value = todo.comment;
   task_priority.value = todo.priority;
+  task_whom.value = todo.whom;
   todos = todos.filter((todo) => todo.id !== id);
   add_btn.innerHTML = "<i class='bx bx-check bx-sm'></i>";
   saveToLocalStorage();
@@ -194,6 +197,15 @@ function filterTodos(status) {
     case "Выполнено":
       filteredTodos = todos.filter((todo) => todo.completed);
       break;
+    case "Отдел №1":
+      filteredTodos = todos.filter((todo) => todo.whom === "Отдел №1");
+      break;
+    case "Отдел №2":
+      filteredTodos = todos.filter((todo) => todo.whom === "Отдел №2");
+      break;
+    case "Отдел №3":
+      filteredTodos = todos.filter((todo) => todo.whom === "Отдел №3");
+      break;
   }
   displayTodos(filteredTodos);
 }
@@ -201,7 +213,7 @@ function filterTodos(status) {
 function displayTodos(todosArray) {
   todos_list_body.innerHTML = "";
   if (todosArray.length === 0) {
-    todos_list_body.innerHTML = `<tr><td colspan="7" class="text-center">Нет задач</td></tr>`;
+    todos_list_body.innerHTML = `<tr><td colspan="8" class="text-center">Нет задач</td></tr>`;
     return;
   }
   todosArray.forEach((todo) => {
@@ -212,6 +224,7 @@ function displayTodos(todosArray) {
                 <td>${todo.dueDate || "Бессрочно"}</td>
                 <td>${todo.completed ? "Выполнено" : "В ожидании"}</td>
                 <td>${todo.priority}</td>
+                <td>${todo.whom}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" onclick="editTodo('${
                       todo.id
@@ -233,3 +246,4 @@ function displayTodos(todosArray) {
     `;
   });
 }
+

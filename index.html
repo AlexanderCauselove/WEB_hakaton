@@ -31,16 +31,27 @@
                 <input type="text" placeholder="Добавить задачу ..." class="input input-bordered input-secondary w-full max-w-xs" id="task"/>
                 <input type="text" placeholder="Комментарий" class="input input-bordered input-secondary w-full max-w-xs" id="comment" />
                 <input type="date" class="input input-bordered input-secondary w-full max-w-xs schedule-date" />
+
                 <select class="input input-bordered input-secondary w-full max-w-xs schedule-date" id="priority" name="priority">
+                    <option disabled selected>Выберите приоритет</option>
                     <option value="Высокий">Высокий</option>
                     <option value="Средний">Средний</option>
                     <option value="Низкий">Низкий</option>
                 </select>
+                <select class="input input-bordered input-secondary w-full max-w-xs schedule-date" id="whom" name="whom">
+                    <option disabled selected>Выберите исполнителя</option>
+                    <option value="Отдел №1">Отдел №1</option>
+                    <option value="Отдел №2">Отдел №2</option>
+                    <option value="Отдел №3">Отдел №3</option>
+                </select>
+
                 <button class="btn btn-secondary add-task-button">
                 <i class="bx bx-plus bx-sm"></i>
                 </button>
             </div>
         </header>
+
+
 
         <div class="todos-filter">
             <div class="dropdown">
@@ -49,8 +60,12 @@
                     <li onclick="filterTodos('Все')"><a>Все</a></li>
                     <li onclick="filterTodos('В ожидании')"><a>В ожидании</a></li>
                     <li onclick="filterTodos('Выполнено')"><a>Выполнено</a></li>
+                    <hr>
+                    <li onclick="filterTodos('Отдел №1')"><a>Отдел №1</a></li>
+                    <li onclick="filterTodos('Отдел №2')"><a>Отдел №2</a></li>
+                    <li onclick="filterTodos('Отдел №3')"><a>Отдел №3</a></li>
                 </ul>
-            </div>
+            </div> 
             <button class="btn btn-secondary delete-all-btn">
                 Удалить всё
             </button>
@@ -64,6 +79,7 @@
                     <th>Срок выполнения</th>
                     <th>Статус</th>
                     <th>Приоритет</th>
+                    <th>Кому</th>
                     <th>Дополнительно</th>
                 </tr>
             </thead>
